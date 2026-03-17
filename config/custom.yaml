@@ -3,12 +3,12 @@ zotero:
   api_key: ${oc.env:ZOTERO_KEY}
   include_path: null
 
-email:
-  sender: ${oc.env:SENDER}
-  receiver: ${oc.env:RECEIVER}
-  smtp_server: smtp.qq.com
-  smtp_port: 465
-  sender_password: ${oc.env:SENDER_PASSWORD}
+pages:
+  output_dir: site
+  site_title: Zotero arXiv Daily
+  keep_days: 180
+  generate_empty_page: true
+  empty_message: No papers today. Take a rest!
 
 llm:
   api:

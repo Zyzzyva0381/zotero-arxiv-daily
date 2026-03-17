@@ -7,10 +7,11 @@ from .protocol import CorpusPaper
 import random
 from datetime import datetime
 from .reranker import get_reranker_cls
-from .construct_email import render_email
-from .utils import send_email
+from .construct_email import write_site
 from openai import OpenAI
 from tqdm import tqdm
+
+
 class Executor:
     def __init__(self, config:DictConfig):
         self.config = config
@@ -82,10 +83,22 @@ class Executor:
             for p in tqdm(reranked_papers):
                 p.generate_tldr(self.openai_client, self.config.llm)
                 p.generate_affiliations(self.openai_client, self.config.llm)
-        elif not self.config.executor.send_empty:
-            logger.info("No new papers found. No email will be sent.")
+        elif not self.config.pages.generate_empty_page:
+            logger.info("No new papers found. Skip site generation.")
             return
-        logger.info("Sending email...")
-        email_content = render_email(reranked_papers)
-        send_email(self.config, email_content)
-        logger.info("Email sent successfully")
+
+        logger.info("Generating static site...")
+        result = write_site(
+            papers=reranked_papers,
+            output_dir=self.config.pages.output_dir,
+            site_title=self.config.pages.site_title,
+            empty_message=self.config.pages.empty_message,
+            keep_days=self.config.pages.keep_days,
+        )
+        logger.info(
+            "Site generated successfully: latest={}, history={}, daily={}, papers={}",
+            result["latest_page"],
+            result["history_page"],
+            result["daily_page"],
+            len(reranked_papers),
+        )

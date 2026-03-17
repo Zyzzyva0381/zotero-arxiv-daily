@@ -36,20 +36,15 @@ environment:
       # 必填参数（示例值）
       - ZOTERO_ID=1234567
       - ZOTERO_KEY=AbCdEfGhIjKlMnOpQrStUvWx
-      - SMTP_SERVER=smtp.example.com
-      - SMTP_PORT=465
-      - SENDER=your_email@example.com
-      - SENDER_PASSWORD=your_email_password
-      - RECEIVER=receiver_email@example.com
+  - OPENAI_API_KEY=sk-your-openai-key-here
+  - OPENAI_API_BASE=https://api.openai.com/v1
+  - CUSTOM_CONFIG=zotero:\n  user_id: ${oc.env:ZOTERO_ID}\n  api_key: ${oc.env:ZOTERO_KEY}\npages:\n  output_dir: site\n  site_title: Zotero arXiv Daily\n  keep_days: 180\n  generate_empty_page: true\n  empty_message: No papers today.\nsource:\n  arxiv:\n    category: [\"cs.AI\",\"cs.CV\"]\nexecutor:\n  source: [\'arxiv\']
 
       # 可选参数（带默认值）
       - ZOTERO_IGNORE=already_read_papers
       - ARXIV_QUERY=cs.AI+cs.CV+cs.LG+cs.CL
-      - SEND_EMPTY=False
       - MAX_PAPER_NUM=5
       - USE_LLM_API=1
-      - OPENAI_API_KEY=sk-your-openai-key-here
-      - OPENAI_API_BASE=https://api.openai.com/v1
       - MODEL_NAME=Qwen/Qwen1.5-7B-Instruct
       - LANGUAGE=English
       
