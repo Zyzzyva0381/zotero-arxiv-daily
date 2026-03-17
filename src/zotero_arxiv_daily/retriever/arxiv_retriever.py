@@ -4,14 +4,18 @@ from arxiv import Result as ArxivResult
 from ..protocol import Paper
 from ..utils import extract_markdown_from_pdf, extract_tex_code_from_tar
 from tempfile import TemporaryDirectory
-from concurrent.futures import ThreadPoolExecutor, TimeoutError
 import feedparser
-from urllib.request import urlretrieve
+from urllib.request import urlopen
 from tqdm import tqdm
 import os
+import shutil
+import time
 from loguru import logger
 
-PDF_EXTRACT_TIMEOUT = 180
+DOWNLOAD_TIMEOUT = 60
+DOWNLOAD_RETRIES = 3
+
+
 @register_retriever("arxiv")
 class ArxivRetriever(BaseRetriever):
     def __init__(self, config):
@@ -52,12 +56,7 @@ class ArxivRetriever(BaseRetriever):
         authors = [a.name for a in raw_paper.authors]
         abstract = raw_paper.summary
         pdf_url = raw_paper.pdf_url
-        try:
-            with ThreadPoolExecutor(max_workers=1) as pool:
-                full_text = pool.submit(extract_text_from_pdf, raw_paper).result(timeout=PDF_EXTRACT_TIMEOUT)
-        except TimeoutError:
-            logger.warning(f"PDF extraction timed out for {raw_paper.title}")
-            full_text = None
+        full_text = extract_text_from_pdf(raw_paper)
         if full_text is None:
             full_text = extract_text_from_tar(raw_paper)
         return Paper(
@@ -70,13 +69,28 @@ class ArxivRetriever(BaseRetriever):
             full_text=full_text
         )
 
+
+def download_file(url: str, path: str, timeout: int = DOWNLOAD_TIMEOUT) -> bool:
+    for attempt in range(1, DOWNLOAD_RETRIES + 1):
+        try:
+            with urlopen(url, timeout=timeout) as response, open(path, "wb") as file_obj:
+                shutil.copyfileobj(response, file_obj)
+            return True
+        except Exception as e:
+            if attempt == DOWNLOAD_RETRIES:
+                logger.warning(f"Failed downloading {url}: {e}")
+                return False
+            logger.debug(f"Download retry {attempt}/{DOWNLOAD_RETRIES} for {url}: {e}")
+            time.sleep(2)
+
 def extract_text_from_pdf(paper: ArxivResult) -> str | None:
     with TemporaryDirectory() as temp_dir:
         path = os.path.join(temp_dir, "paper.pdf")
         if paper.pdf_url is None:
             logger.warning(f"No PDF URL available for {paper.title}")
             return None
-        urlretrieve(paper.pdf_url, path)
+        if not download_file(paper.pdf_url, path):
+            return None
         try:
             full_text = extract_markdown_from_pdf(path)
         except Exception as e:
@@ -91,7 +105,8 @@ def extract_text_from_tar(paper: ArxivResult) -> str | None:
         if source_url is None:
             logger.warning(f"No source URL available for {paper.title}")
             return None
-        urlretrieve(source_url, path)
+        if not download_file(source_url, path):
+            return None
         try:
             file_contents = extract_tex_code_from_tar(path, paper.entry_id)
             if "all" not in file_contents:
