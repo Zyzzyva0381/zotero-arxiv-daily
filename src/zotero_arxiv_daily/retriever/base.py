@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
 from omegaconf import DictConfig
 from ..protocol import Paper, RawPaperItem
-from concurrent.futures import ProcessPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 from typing import Type
 from loguru import logger
+
+
 class BaseRetriever(ABC):
     name: str
     def __init__(self, config:DictConfig):
@@ -23,11 +25,16 @@ class BaseRetriever(ABC):
         raw_papers = self._retrieve_raw_papers()
         papers = []
         logger.info("Processing papers...")
-        with ProcessPoolExecutor(max_workers=self.config.executor.max_workers) as exec_pool:
+        with ThreadPoolExecutor(max_workers=self.config.executor.max_workers) as exec_pool:
             futures = {exec_pool.submit(self.convert_to_paper, rp): i for i, rp in enumerate(raw_papers)}
             papers = [None] * len(raw_papers)
             for future in tqdm(as_completed(futures), total=len(raw_papers), desc="Converting papers"):
-                papers[futures[future]] = future.result()
+                idx = futures[future]
+                try:
+                    papers[idx] = future.result()
+                except Exception as e:
+                    logger.warning(f"Failed to convert paper at index {idx}: {e}")
+                    papers[idx] = None
         return [p for p in papers if p is not None]
 
 registered_retrievers = {}
