@@ -1,74 +1,85 @@
 <p align="center">
-  <a href="" rel="noopener">
- <img width=200px height=200px src="assets/logo.svg" alt="logo"></a>
+  <img width="180" height="180" src="assets/logo.svg" alt="zotero-arxiv-daily logo">
 </p>
 
-<h3 align="center">Zotero-arXiv-Daily</h3>
+<h2 align="center">Zotero arXiv Daily (GitHub Pages Edition)</h2>
 
-<div align="center">
-
-  [![Status](https://img.shields.io/badge/status-active-success.svg)]()
-  ![Stars](https://img.shields.io/github/stars/TideDra/zotero-arxiv-daily?style=flat)
-  [![GitHub Issues](https://img.shields.io/github/issues/TideDra/zotero-arxiv-daily)](https://github.com/TideDra/zotero-arxiv-daily/issues)
-  [![GitHub Pull Requests](https://img.shields.io/github/issues-pr/TideDra/zotero-arxiv-daily)](https://github.com/TideDra/zotero-arxiv-daily/pulls)
-  [![License](https://img.shields.io/github/license/TideDra/zotero-arxiv-daily)](/LICENSE)
-  [<img src="https://api.gitsponsors.com/api/badge/img?id=893025857" height="20">](https://api.gitsponsors.com/api/badge/link?p=PKMtRut1dWWuC1oFdJweyDSvJg454/GkdIx4IinvBblaX2AY4rQ7FYKAK1ZjApoiNhYEeduIEhfeZVIwoIVlvcwdJXVFD2nV2EE5j6lYXaT/RHrcsQbFl3aKe1F3hliP26OMayXOoZVDidl05wj+yg==)
-
-</div>
-
----
-
-<p align="center"> Recommend new arxiv papers of your interest daily according to your Zotero library.
-    <br> 
+<p align="center">
+  Recommend new papers daily from your Zotero interest profile,
+  and publish results as a static website on GitHub Pages.
 </p>
 
-> [!IMPORTANT]
-> Please keep an eye on this repo, and merge your forked repo in time when there is any update of this upstream, in order to enjoy new features and fix found bugs.
+## Fork Notice
 
-## 🧐 About <a name = "about"></a>
+This repository is a fork and modification of:
 
-> Track new scientific researches of your interest by just forking (and staring) this repo!😊
+https://github.com/TideDra/zotero-arxiv-daily
 
-*Zotero-arXiv-Daily* finds arxiv papers that may attract you based on the context of your Zotero library, and publishes a daily updated static website on GitHub Pages. It can be deployed as Github Action Workflow with **zero cost**, **no installation**, and **few configuration** of Github Action environment variables for daily **automatic** delivery.
+Core statement:
 
-## ✨ Features
-- Totally free! All the calculation can be done in the Github Action runner locally within its quota (for public repo).
-- AI-generated TL;DR for you to quickly pick up target papers.
-- Affiliations of the paper are resolved and presented.
-- Links of PDF and paper pages presented on a static website.
-- List of papers sorted by relevance with your recent research interest.
-- Fast deployment via fork this repo and set environment variables in the Github Action Page.
-- Support LLM API for generating TL;DR of papers.
-- Ignore unwanted Zotero papers using glob pattern.
-- Support multiple sources of papers to retrieve:
-  - arxiv
-  - biorxiv
-  - medrxiv
+1. This project is based on the upstream implementation and keeps attribution to the original author/repository.
+2. This fork changes the delivery mode from email to GitHub Pages static site publishing.
+3. This fork remains under GNU Affero General Public License Version 3 and keeps the license notice.
 
-## 📷 Screenshot
-![screenshot](./assets/screenshot.png)
+## License Compliance Statement (AGPLv3)
 
-## 🚀 Usage
-### Quick Start
-1. Fork (and star😘) this repo.
-![fork](./assets/fork.png)
+This repository declares that it does not violate the original GNU Affero General Public License Version 3 requirements.
 
-2. Set Github Action environment variables.
-![secrets](./assets/secrets.png)
+Compliance actions in this fork:
 
-Below are all the secrets you need to set. They are invisible to anyone including you once they are set, for security.
+1. Keep the AGPLv3 license in the repository.
+2. Keep source code available for the modified work.
+3. Keep clear attribution to upstream project and modification origin.
+4. Preserve and publish modification history through Git commits.
 
-| Key |Description | Example |
-| :---  | :---  | :--- |
-| ZOTERO_ID  | User ID of your Zotero account. **User ID is not your username, but a sequence of numbers**Get your ID from [here](https://www.zotero.org/settings/security). You can find it at the position shown in this [screenshot](https://github.com/TideDra/zotero-arxiv-daily/blob/main/assets/userid.png). | 12345678  |
-| ZOTERO_KEY | An Zotero API key with read access. Get a key from [here](https://www.zotero.org/settings/security).  | AB5tZ877P2j7Sm2Mragq041H   |
-| OPENAI_API_KEY | API Key when using the API to access LLMs. You can get FREE API for using advanced open source LLMs in [SiliconFlow](https://cloud.siliconflow.cn/i/b3XhBRAm). | sk-xxx |
-| OPENAI_API_BASE | API URL when using the API to access LLMs. | https://api.siliconflow.cn/v1 |
+## What This Project Does
 
-Then you should also set a public variable `CUSTOM_CONFIG` for your custom configuration.
-![vars](./assets/repo_var.png)
-![custom_config](./assets/config_var.png)
-Paste the following content into the value of `CUSTOM_CONFIG` variable:
+The workflow runs daily and performs:
+
+1. Read your Zotero library as interest corpus.
+2. Retrieve new papers from arXiv/bioRxiv/medRxiv.
+3. Rerank papers by semantic relevance.
+4. Generate TLDR and affiliations with LLM.
+5. Build static pages and deploy to GitHub Pages.
+
+## Key Differences from Upstream
+
+1. No SMTP email sending.
+2. Output is a static website (latest page + history archive).
+3. Deployment uses GitHub Pages artifact workflow.
+
+## Features
+
+1. Daily automatic updates via GitHub Actions.
+2. Static site output for easy browsing and sharing.
+3. Multi-source retrieval: arXiv, bioRxiv, medRxiv.
+4. Reranking with local or API embedding backends.
+5. Optional LLM-enriched TLDR and affiliations.
+6. History retention with per-day snapshots.
+
+## Quick Start
+
+1. Fork this repository.
+2. Enable GitHub Pages in your repository settings.
+3. Configure repository secrets and variables.
+4. Trigger workflow manually once to validate setup.
+5. Visit the deployed Pages URL.
+
+## Required Secrets
+
+| Key | Description |
+| :--- | :--- |
+| ZOTERO_ID | Your Zotero user ID (numeric ID, not username). |
+| ZOTERO_KEY | Zotero read-access API key. |
+| OPENAI_API_KEY | LLM API key used for TLDR/affiliation generation. |
+| OPENAI_API_BASE | LLM API base URL. |
+
+## Required Repository Variable
+
+Create repository variable CUSTOM_CONFIG and set YAML content.
+
+Minimal example:
+
 ```yaml
 zotero:
   user_id: ${oc.env:ZOTERO_ID}
@@ -82,6 +93,11 @@ pages:
   generate_empty_page: true
   empty_message: No papers today. Take a rest!
 
+source:
+  arxiv:
+    category: ["cs.AI", "cs.CV", "cs.LG", "cs.CL"]
+    include_cross_list: false
+
 llm:
   api:
     key: ${oc.env:OPENAI_API_KEY}
@@ -89,122 +105,75 @@ llm:
   generation_kwargs:
     model: gpt-4o-mini
 
-source:
-  arxiv:
-    category: ["cs.AI","cs.CV","cs.LG","cs.CL"]
-    include_cross_list: false # Set to true to include arXiv cross-list papers in these categories.
-
 executor:
-  debug: ${oc.env:DEBUG,null}
-  source: ['arxiv']
-```
-Set `source.arxiv.include_cross_list: true` if you want cross-listed papers included.
->[!NOTE]
-> `${oc.env:XXX,yyy}` means the value of the environment variable `XXX`. If the variable is not set, the default value `yyy` will be used.
-
-Here is the full configuration, `???` means the value must be filled in:
-```yaml
-zotero:
-  user_id: ??? # User ID of your Zotero account.
-  api_key: ??? # An Zotero API key with read access.
-  include_path: null # A glob pattern marking the Zotero collections that should be included. Example: "2026/survey/**"
-
-source:
-  arxiv:
-    category: null # The categories of target arxiv papers. Find the abbr of your research area from [here](https://arxiv.org/category_taxonomy). Example: ["cs.AI","cs.CV","cs.LG","cs.CL"]
-    include_cross_list: false # Whether to include arXiv cross-list papers in subscribed categories. Example: true
-  biorxiv:
-    category: null # The categories of target biorxiv papers. Find categories from [here](https://www.biorxiv.org/). Example: ["biochemistry","animal behavior and cognition"]
-  medrxiv:
-    category: null # The categories of target medrxiv papers. Find categories from [here](https://www.medrxiv.org/) Example: ["psychiatry and clinical psychology", "neurology"]
-
-pages:
-  output_dir: site # Output directory for generated static website.
-  site_title: Zotero arXiv Daily # The title shown on GitHub Pages.
-  keep_days: 180 # Number of daily snapshots to retain in history. Set 0 to keep all.
-  generate_empty_page: true # Whether to generate a page when there are no new papers.
-  empty_message: No papers today. Take a rest! # Message shown on empty days.
-
-llm:
-  api:
-    key: ??? # API Key of your LLM API. Example: sk-xxx
-    base_url: ??? # API URL of your LLM API. Example: https://api.openai.com/v1
-  generation_kwargs:
-  # Arguments for the LLM API. See [here](https://platform.openai.com/docs/api-reference/chat/create) for more details.
-    max_tokens: 16384
-    model: ???
-  language: English # Preferred language for the TL;DR. Example: English
-
-reranker:
-  local:
-    model: jinaai/jina-embeddings-v5-text-nano # The Hugging Face model name of the local embedding model. Example: jinaai/jina-embeddings-v5-text-nano
-    encode_kwargs:
-    # The kwargs for the encode method of the local embedding model. Details see [here](https://www.sbert.net/docs/package_reference/SentenceTransformer.html#sentence_transformers.SentenceTransformer.encode)
-      task: retrieval
-      prompt_name: document
-  api:
-    key: null # API Key of your embedding model API. Example: sk-xxx
-    base_url: null # API URL of your embedding model API. Example: https://api.openai.com/v1
-    model: null # The model name of the embedding model. Example: text-embedding-3-large
-    batch_size: null # The batch size for embedding API requests. Adjust to match your provider's limit. Example: 64
-
-executor:
-  debug: false # Whether to use debug mode. Example: true
-  max_workers: 4 # Concurrent workers for processing papers. Example: 4
-  max_paper_num: 100 # The maximum number of papers presented on the site. Example: 100
-  source: ??? # The sources of papers to retrieve. Example: ['arxiv','biorxiv','medrxiv']
-  reranker: local # The reranker to use. Example: 'local' or 'api'
+  debug: false
+  source: ["arxiv"]
+  reranker: local
 ```
 
-That's all! Now you can test the workflow by manually triggering it:
-![test](./assets/test.png)
+## Configuration Reference
 
-> [!NOTE]
-> The Test-Workflow Action is the debug version of the main workflow (Build-and-Deploy-Pages-Daily), which always retrieve 5 arxiv papers regardless of the date. While the main workflow will be automatically triggered everyday and retrieve new papers released yesterday. There is no new arxiv paper at weekends and holiday, in which case you may see "No new papers found" in the log of main workflow.
+Main sections:
 
-Then check the workflow log and your GitHub Pages site after it finishes.
+1. zotero: Zotero credentials and corpus path filters.
+2. source: paper source-specific categories.
+3. pages: static output behavior and history retention.
+4. llm: model endpoint and generation settings.
+5. reranker: local or API embedding reranker.
+6. executor: pipeline switches and paper count limits.
 
-By default, the main workflow runs on 22:00 UTC everyday. You can change this time by editting the workflow config `.github/workflows/main.yml`.
+Important runtime knobs:
 
-### Local Running
-Supported by [uv](https://github.com/astral-sh/uv), this workflow can easily run on your local device if uv is installed:
+1. executor.max_paper_num: maximum displayed/enriched papers.
+2. pages.keep_days: number of days preserved in history.
+3. pages.generate_empty_page: whether to render empty-day page.
+
+## Workflow and Deployment
+
+Daily workflow:
+
+1. Build static site into site directory.
+2. Upload Pages artifact.
+3. Deploy with GitHub Pages deploy action.
+
+Default schedule is in .github/workflows/main.yml.
+
+## Local Run
+
+Use uv to run locally:
+
 ```bash
-# set all the environment variables
-# export ZOTERO_ID=xxxx
-# ...
 cd zotero-arxiv-daily
-uv run main.py
+uv run src/zotero_arxiv_daily/main.py
 ```
 
-## 🚀 Sync with the latest version
-This project is in active development. You can subscribe this repo via `Watch` so that you can be notified once we publish new release.
+Before local run, export required environment variables or provide equivalent values in config.
 
-![Watch](./assets/subscribe_release.png)
+## Limitations
 
+1. Recommendation algorithm is still heuristic and may not fully represent user preference.
+2. Large executor.max_paper_num increases runtime and API usage.
+3. Upstream API/network instability can impact daily generation.
 
-## 📖 How it works
-*Zotero-arXiv-Daily* firstly retrieves all the papers in your Zotero library and all the papers released in the previous day, via corresponding API. Then it calculates the embedding of each paper's abstract via an embedding model. The score of a paper is its weighted average similarity over all your Zotero papers (newer paper added to the library has higher weight). The TLDR of each paper is generated by LLM, given the text extracted by pymupdf4llm.
+## Contribution
 
-## 📌 Limitations
-- The recommendation algorithm is very simple, it may not accurately reflect your interest. Welcome better ideas for improving the algorithm!
-- High `MAX_PAPER_NUM` can lead the execution time exceed the limitation of Github Action runner (6h per execution for public repo, and 2000 mins per month for private repo). Commonly, the quota given to public repo is definitely enough for individual use. If you have special requirements, you can deploy the workflow in your own server, or use a self-hosted Github Action runner, or pay for the exceeded execution time.
+Issues and pull requests are welcome.
 
-## 👯‍♂️ Contribution
-Any issue and PR are welcomed! But remember that **each PR should merge to the `dev` branch**.
+When contributing:
 
-## 📃 License
-Distributed under the AGPLv3 License. See `LICENSE` for detail.
+1. Keep upstream attribution intact.
+2. Keep AGPLv3 compliance intact.
+3. Prefer small, reviewable PRs with tests.
 
-## ❤️ Acknowledgement
-- [pyzotero](https://github.com/urschrei/pyzotero)
-- [arxiv](https://github.com/lukasschwab/arxiv.py)
-- [sentence_transformers](https://github.com/UKPLab/sentence-transformers)
+## Acknowledgements
 
-## ☕ Buy Me A Coffee
-If you find this project helpful, welcome to sponsor me via WeChat or via [ko-fi](https://ko-fi.com/tidedra).
-![wechat_qr](assets/wechat_sponsor.JPG)
+1. Upstream project: https://github.com/TideDra/zotero-arxiv-daily
+2. pyzotero: https://github.com/urschrei/pyzotero
+3. arxiv.py: https://github.com/lukasschwab/arxiv.py
+4. sentence-transformers: https://github.com/UKPLab/sentence-transformers
 
+## License
 
-## 🌟 Star History
+Distributed under GNU Affero General Public License Version 3.
 
-[![Star History Chart](https://api.star-history.com/svg?repos=TideDra/zotero-arxiv-daily&type=Date)](https://star-history.com/#TideDra/zotero-arxiv-daily&Date)
+This fork keeps and follows AGPLv3 requirements and includes full source for modifications.
