@@ -214,11 +214,12 @@ def _render_daily_page(
     site_title: str,
     day_text: str,
     empty_message: str,
-    include_history_link: bool,
+  latest_href: str,
+  history_href: str | None,
 ) -> str:
-    nav_parts = ['<a href="/">Latest</a>']
-    if include_history_link:
-        nav_parts.append('<a href="/history/">History</a>')
+  nav_parts = [f'<a href="{escape(latest_href)}">Latest</a>']
+  if history_href:
+    nav_parts.append(f'<a href="{escape(history_href)}">History</a>')
     nav_html = "".join(nav_parts)
 
     if not papers:
@@ -241,7 +242,7 @@ def _render_history_page(history: list[dict], site_title: str) -> str:
         papers = int(item.get("paper_count", 0))
         href = _safe(item["href"])
         items.append(
-            f'<li><a href="/{href}">{day}</a><span>{papers} paper(s)</span></li>'
+      f'<li><a href="../{href}">{day}</a><span>{papers} paper(s)</span></li>'
         )
 
     body = "\n".join(items) if items else '<section class="empty">No history available yet.</section>'
@@ -250,7 +251,7 @@ def _render_history_page(history: list[dict], site_title: str) -> str:
     return _build_page(
         title=f"{site_title} - History",
         subtitle="Archived daily snapshots",
-        nav_html='<a href="/">Latest</a>',
+      nav_html='<a href="../">Latest</a>',
         body_html=body,
     )
 
@@ -272,12 +273,21 @@ def write_site(
     history_dir.mkdir(parents=True, exist_ok=True)
 
     today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    daily_html = _render_daily_page(
+    latest_html = _render_daily_page(
         papers=papers,
         site_title=site_title,
         day_text=today,
         empty_message=empty_message,
-        include_history_link=True,
+      latest_href="./",
+      history_href="history/",
+    )
+    daily_html = _render_daily_page(
+      papers=papers,
+      site_title=site_title,
+      day_text=today,
+      empty_message=empty_message,
+      latest_href="../",
+      history_href="../history/",
     )
 
     daily_html_path = days_dir / f"{today}.html"
@@ -287,7 +297,7 @@ def write_site(
     history_html_path = history_dir / "index.html"
 
     daily_html_path.write_text(daily_html, encoding="utf-8")
-    latest_path.write_text(daily_html, encoding="utf-8")
+    latest_path.write_text(latest_html, encoding="utf-8")
     daily_json_path.write_text(
         json.dumps(
             {

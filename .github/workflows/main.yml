@@ -29,6 +29,43 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
 
+      - name: Restore previous site from GitHub Pages
+        run: |
+          BASE_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          echo "Restore from ${BASE_URL}"
+          mkdir -p site/data site/days site/history
+
+          curl -fsSL "${BASE_URL}/data/history.json" -o site/data/history.json || true
+          curl -fsSL "${BASE_URL}/history/index.html" -o site/history/index.html || true
+          curl -fsSL "${BASE_URL}/index.html" -o site/index.html || true
+
+          BASE_URL="$BASE_URL" python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          history_path = "site/data/history.json"
+          if not os.path.exists(history_path):
+              raise SystemExit(0)
+
+          base_url = os.environ["BASE_URL"].rstrip("/")
+          with open(history_path, "r", encoding="utf-8") as f:
+              history = json.load(f)
+
+          for item in history:
+              href = item.get("href")
+              if not href:
+                  continue
+              href = href.lstrip("/")
+              dst = os.path.join("site", href)
+              os.makedirs(os.path.dirname(dst), exist_ok=True)
+              url = f"{base_url}/{href}"
+              try:
+                  urllib.request.urlretrieve(url, dst)
+              except Exception:
+                  pass
+          PY
+
       - name: Build static site
         env:
           ZOTERO_ID: ${{ secrets.ZOTERO_ID }}
